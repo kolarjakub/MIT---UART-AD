@@ -3,6 +3,7 @@
 /*#include "delay.h"*/
 #include <stdio.h>
 #include "uart1.h"
+#include "spse_stm8.h"
 
 #define _ISOC99_SOURCE
 #define _GNU_SOURCE
@@ -46,6 +47,7 @@ void setup(void)
 
 }
 
+uint16_t ADCx=0;
 
 int main(void)
 {
@@ -58,7 +60,8 @@ int main(void)
         if (milis() - time > 333 && BTN_PUSH) {
             LED_REVERSE;
             time = milis();
-            printf("%ld\n\r", time);
+            ADCx=ADC_get(ADC2_CHANNEL_4);
+            printf("%ld %d\n\r", time,ADCx);
         }
 
         /*LED_REVERSE; */
