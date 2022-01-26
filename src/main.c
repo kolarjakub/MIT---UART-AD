@@ -44,10 +44,12 @@ void setup(void)
     ADC2_Cmd(ENABLE);
     // počkáme než se AD převodník rozběhne (~7us)
     ADC2_Startup_Wait();
-
 }
 
 uint16_t ADCx=0;
+uint16_t napeti=0;
+uint16_t teplota=0;
+
 
 int main(void)
 {
@@ -57,12 +59,18 @@ int main(void)
 
     while (1) {
 
-        if (milis() - time > 333 && BTN_PUSH) {
+        if (milis() - time > 999 /*&& BTN_PUSH*/) {
             LED_REVERSE;
             time = milis();
             ADCx=ADC_get(ADC2_CHANNEL_4);
-            printf("%ld %d\n\r", time,ADCx);
+            //printf("%ld %d\n\r", time,ADCx);
+            napeti=(uint32_t)3300*ADCx/(uint32_t)1024;
+            teplota=((uint32_t)33000*ADCx-4096000)/19968;
+            printf("%d jednotek, U = %dmV, T = %d.%d °C\n\r",ADCx, napeti,teplota/10,teplota%10);
+            //%ld papá i uint32_t
         }
+        //float - problém se zaokrouhlováním, moc velké ==> děláme v pevné řadové čárce
+        //pravidla zaokrouhlování - do čitatele přidám půlku jmenovatele - bude to podle pravidel zaokrouhlení
 
         /*LED_REVERSE; */
         /*_delay_ms(333);*/
